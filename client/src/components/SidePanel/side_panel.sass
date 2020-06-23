@@ -1,0 +1,100 @@
+.side-panel
+    height: 100vh
+    width: 23%
+    position: fixed
+    background-color: #fff
+    top: 0
+    left: 0
+    padding: 30px 0
+    overflow: auto
+    &__btn-wrapper
+        display: flex
+        justify-content: center
+        padding: 0 30px
+    &__btn-redact
+        display: block
+        margin: 0 auto
+        margin-bottom: 10px
+        background-color: #4682B4
+        border: none
+        color: #fff
+        height: 35px
+        font-size: 12px
+        font-weight: bold
+        border-radius: 25px
+        outline: none
+        cursor: pointer
+        &_hidden
+            display: none
+    &__btn-clear
+        display: block
+        margin: 0 auto
+        margin-bottom: 10px
+        background-color: #4682B4
+        border: none
+        color: #fff
+        height: 35px
+        font-size: 12px
+        font-weight: bold
+        border-radius: 25px
+        outline: none
+        cursor: pointer
+        &_hidden
+            display: none
+    &__form
+        padding: 0 30px 0 20px
+        height: 90vh
+        display: flex
+        flex-direction: column
+        justify-content: space-between
+        text-align: center
+        font-family: sans-serif
+        font-size: 20px
+        &__group
+            display: flex
+            flex-direction: column
+            label
+                margin-bottom: 8px
+            input
+                border: 1px solid rgba(0, 0, 0, 0.6)
+                border-radius: 25px
+                height: 25px
+                border-radius: 10px
+                outline: none
+        button
+            background-color: #4682B4
+            border: none
+            color: #fff
+            height: 35px
+            font-size: 12px
+            font-weight: bold
+            border-radius: 25px
+            outline: none
+            cursor: pointer
+            margin-bottom: 15px
+.choise
+    position: fixed
+    height: 100vh
+    width: 21%
+    display: flex
+    flex-direction: column
+    justify-content: flex-start
+    text-align: center
+    padding-top: 30px
+    &__title
+        font-family: sans-serif
+        font-size: 20px
+    &__subtitle 
+        font-family: sans-serif
+        font-size: 20px
+        margin-bottom: 10px
+    &__button
+        background-color: #4682B4
+        color: #ffffff
+        border: none
+        border-radius: 15px
+        height: 35px
+        cursor: pointer
+        outline: none
+        font-size: 17px
+        font-weight: 400
