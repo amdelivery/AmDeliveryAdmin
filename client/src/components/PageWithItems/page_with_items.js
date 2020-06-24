@@ -6,11 +6,11 @@ import {
   } from 'reactstrap';
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
-import {getAllItems, changeItem, deleteOneItem, selectItem, savingFunc, saveToggle} from '../../actions/actions.js';
+import {getAllItems, changeItem, deleteOneItem, selectItem, clearDb} from '../../actions/actions.js';
 import axios from 'axios';
 
 
-  const PageWithItems = ({allItems, getAllItems, changeItem, ChangedItem, deleteOneItem, selectItem, saveDone, savingFunc, saveToggle}) => {
+  const PageWithItems = ({allItems, getAllItems, changeItem, ChangedItem, deleteOneItem, selectItem, saveDone, clearDb}) => {
       const saving = (saveDone === false) ? (<div className="page-with-items__saving">Сохранение данных...</div>) : null;
       const renderedItem = (allItems.length === 0) ? null : (
         <>
@@ -39,7 +39,7 @@ import axios from 'axios';
       return (
           <div className="page-with-items">
               {saving}
-              <Button onClick={(e) => savingFunc(allItems, e)} className="page-with-items__button__save">Сохранить в базу</Button>
+              <Button onClick={(e) => clearDb(allItems, e)} className="page-with-items__button__save">Сохранить в базу</Button>
               <Button onClick={(e) => getAllItems(e)} className="page-with-items__button">Обновить</Button>
               {renderedItem}
 
@@ -53,9 +53,8 @@ import axios from 'axios';
       changeItem: PropTypes.func,
       ChangedItem: PropTypes.object,
       deleteOneItem: PropTypes.func,
-      saveToggle: PropTypes.func,
       saveDone: PropTypes.bool,
-      savingFunc: PropTypes.func
+      clearDb: PropTypes.func
   }
 
 
@@ -68,4 +67,5 @@ import axios from 'axios';
 
   }
 
-  export default connect(mapStateToProps, {getAllItems, saveToggle, changeItem, deleteOneItem, selectItem, savingFunc})(PageWithItems);
+  export default connect(mapStateToProps, {getAllItems, changeItem, deleteOneItem, selectItem, clearDb})(PageWithItems);
+

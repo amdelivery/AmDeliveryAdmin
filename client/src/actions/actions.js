@@ -11,7 +11,8 @@ import {GET_DATA,
         CHANGE_CATEGORY_NAME, 
         CHANGE_CATEGORY_WEIGHT, 
         CLEAR_SIDE_PANEL,
-        SAVE_DONE_TOGGLE} from './types.js';
+        CLEAR_DB,
+        SAVE_DB} from './types.js';
 import axios from 'axios';
 
 export const getAllItems = () => dispatch => {
@@ -63,6 +64,7 @@ export const clearState = () => {
     }
 }
 
+
 export const changeName = (value) => {
     return {
         type: CHANGE_NAME,
@@ -105,17 +107,21 @@ export const changeCategoryWeight = (value) => {
     }
 }
 
-export const saveToggle = () => {
-    return {
-        type: SAVE_DONE_TOGGLE
-    }
+
+
+export const clearDb = (allItems) => async dispatch => {
+       await dispatch ({
+               type: CLEAR_DB  
+       }); 
+       await dispatch ({
+               type: SAVE_DB,
+               payload: allItems
+       });
+       
 }
 
 
-export const savingFunc = (allItems) => dispatch => {
-        axios.post('/api/del').then(allItems.map(item => {
-            axios.post('/api', item).then(response => console.log(response)).catch(err => console.log(err));
-            })).catch(err => console.log(err));
-}
+
+
 
 

@@ -1,13 +1,13 @@
 import {v4 as uuid} from 'uuid';
+import axios from "axios";
 
 
 const initialState = {
     allItems: [],
-    saveDone: true,
     ChangedItem: null,
     categories: [],
     itemInSidePanel: {
-        _id: uuid(),
+        _id: "",
         name: "",
         description: "",
         imgUrl: "",
@@ -48,7 +48,7 @@ const reducer = (state = initialState, action) => {
 
         case "DELETE_ONE": {
             const index = state.allItems.indexOf(action.payload);
-            console.log(index, action.payload)
+            console.log('element deleted');
             return {
                 ...state,
                 allItems: [...state.allItems.slice(0, index), ...state.allItems.slice(index + 1)]
@@ -82,7 +82,6 @@ const reducer = (state = initialState, action) => {
         }
 
         case "CHANGE_NAME": {
-            console.log(action.payload)
             return {
                 ...state,
                 itemInSidePanel: {
@@ -152,17 +151,33 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 ChangedItem: null,
-                itemInSidePanel: initialState.itemInSidePanel
+                itemInSidePanel: {
+                    ...initialState.itemInSidePanel,
+                    _id: uuid() 
+               }
             }
         }
 
-        case "SAVE_DONE_TOGGLE": {
-            console.log(state.saveDone)
+        case "CLEAR_DB": {
+            axios.post('/api/del').then(res => console.log("done"));
+            console.log("clear done");
             return {
                 ...state,
-                saveDone: !state.saveDone
             }
         }
+
+        case "SAVE_DB": {
+            let saveRequest = () => {
+                action.payload.map(item => {axios.post('/api', item).then(res => console.log(res.status))});
+                console.log("save done");
+                
+            }
+            setTimeout(saveRequest, 2000);
+            return {
+                ...state,
+            }
+        }
+
             
         default :
         return state
