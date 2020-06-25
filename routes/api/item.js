@@ -3,9 +3,14 @@ const router = express.Router();
 
 
 const Item = require('../../models/item.js');
+const Order = require('../../models/order.js');
 
 router.get('/', (req, res) => {
     Item.find().sort().then(items => res.json(items))
+})
+
+router.get('/orders', (req, res) => {
+    Order.find().sort().then(items => res.json(items))
 })
 
 router.post('/', (req, res) => {

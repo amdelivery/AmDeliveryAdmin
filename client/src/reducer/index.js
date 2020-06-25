@@ -167,9 +167,12 @@ const reducer = (state = initialState, action) => {
         }
 
         case "SAVE_DB": {
-            let saveRequest = () => {
-                action.payload.map(item => {axios.post('/api', item).then(res => console.log(res.status))});
-                console.log("save done");
+            let saveRequest = async () => {
+                await action.payload.map(item => {
+                    axios.post('/api', item)
+                         .then(res => console.log(res.status));
+                });
+                alert("Успешно сохранено");
                 
             }
             setTimeout(saveRequest, 2000);
