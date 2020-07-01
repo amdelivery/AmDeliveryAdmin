@@ -7,7 +7,6 @@ import {
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {getAllItems, changeItem, deleteOneItem, selectItem, clearDb} from '../../actions/actions.js';
-import {Link} from 'react-router-dom';
 
 
   const PageWithItems = ({allItems, getAllItems, changeItem, ChangedItem, deleteOneItem, selectItem, saveDone, clearDb}) => {

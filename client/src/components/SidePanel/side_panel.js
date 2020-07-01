@@ -48,9 +48,11 @@ const SidePanel = ({allItems, itemInSidePanel, clearState, changeName, changeDes
                     if (findItemById === undefined) {
                         addNewItem(itemInSidePanel);
                         console.log(itemInSidePanel._id);
+                        clearState();
                     } else {
                         changeExistItem(itemInSidePanel);
                         console.log(itemInSidePanel._id);
+                        clearState();
                     }
                 }}>Сохранить изменения</Button>
                 </Form>

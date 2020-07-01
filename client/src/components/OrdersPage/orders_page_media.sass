@@ -1,0 +1,57 @@
+@media screen and (max-width: 1024px) 
+    .container
+        width: 1024px
+        padding: 0 20px
+
+@media screen and (max-width: 768px)
+    .container
+        width: 768px
+
+@media screen and (max-width: 425px)
+    .container
+        width: 425px
+    .orders-page
+        &__order
+            flex-direction: column
+            &__leftside
+                width: 100%
+                margin-bottom: 20px
+                border-bottom: 2px solid rgba(0, 0, 0, 0.6)
+                padding-bottom: 8px
+                line-height: 20px
+            &__rightside
+                width: 100%
+                line-height: 20px
+            &__button
+                margin-left: 94px
+    
+@media screen and (max-width: 375px)
+    h1
+        font-size: 20px
+    .container
+        width: 375px
+    .orders-page
+        &__order
+            &__leftside
+                font-size: 15px
+            &__rightside
+                font-size: 15px
+            &__button
+                margin-left: 88px
+                button
+                    width: 140px
+                    height: 40px
+                    font-size: 15px
+
+@media screen and (max-width: 320px)
+    .container
+        width: 320px
+    .orders-page
+        &__order
+            &__leftside
+                font-size: 13px
+            &__rightside
+                font-size: 13px
+            &__button
+                margin-left: 54px
+

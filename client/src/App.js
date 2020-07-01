@@ -1,7 +1,7 @@
 import React from 'react';
 import PageWithItems from './components/PageWithItems';
 import SidePanel from './components/SidePanel';
-import {Route, BrowserRouter, Link, Switch} from 'react-router-dom';
+import {Route, BrowserRouter, Link} from 'react-router-dom';
 import OrdersPage from './components/OrdersPage';
 import './App.sass';
 

@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const OrderSchema = new Schema ({
+const CompletedOrderSchema = new Schema ({
     date: String,
     adress: String,
     phone: String,
     comment: String,
     items: Array,
     cost: String,
-    accepted: Boolean
 })
 
-module.exports = Order = mongoose.model('order', OrderSchema);
+module.exports = CompleteOrder = mongoose.model('complete-order', CompletedOrderSchema);
