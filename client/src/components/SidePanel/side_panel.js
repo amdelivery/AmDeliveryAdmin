@@ -35,7 +35,7 @@ const SidePanel = ({itemInSidePanel, clearState, changeName, changeDescription, 
                     <Input value={itemInSidePanel.imgUrl} onChange={(e) => changeImgUrl(e.target.value)} type="text" name="imgurl" id="imgurl" placeholder="Вставьте ссылку на картинку" />
                 </FormGroup>
                 <FormGroup className={(ChangedItem) ? "side-panel__form__group" : "hidden"}>
-                    <Label for="available">Доступен: <Input type="select" value={itemInSidePanel.available} name="available" id="available" onChange={(e) => changeAvailable(e.target.value)}>
+                    <Label for="available">Доступен: <Input className="available" type="select" value={itemInSidePanel.available} name="available" id="available" onChange={(e) => changeAvailable(e.target.value)}>
                                                         <option>Да</option>
                                                         <option>Нет</option>
                                                     </Input>
