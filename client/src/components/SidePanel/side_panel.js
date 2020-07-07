@@ -3,16 +3,16 @@ import {connect} from 'react-redux';
 import './side_panel.sass';
 import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import PropTypes from 'prop-types';
-import {addNewItem, changeExistItem, clearState, changeName, changeDescription, changePrice, changeImgUrl, changeCategoryName, changeCategoryWeight} from '../../actions/actions.js';
+import {addNewItem, changeExistItem, clearState, changeName, changeDescription, changePrice, changeImgUrl, changeCategory, categoriesModalOpen, changeAvailable, start} from '../../actions/actions.js';
 
-
-const SidePanel = ({allItems, itemInSidePanel, clearState, changeName, changeDescription, changePrice, changeImgUrl, changeCategoryName, changeCategoryWeight, addNewItem, changeExistItem}) => {
+const SidePanel = ({itemInSidePanel, clearState, changeName, changeDescription, categories, changePrice, changeImgUrl, changeCategory, addNewItem, changeExistItem, categoriesModalOpen, categoriesModalIsOpen, changeAvailable, ChangedItem}) => {
 
         
             
         
         return (
             <div className="side-panel">
+                <div className={(categoriesModalIsOpen === true) ? "side-panel__overlay" : "hidden"}></div>
                 <div className="side-panel__btn-wrapper">
                     <Button onClick={(e) => clearState(e)} className="side-panel__btn-clear">Сброс</Button>
                 </div>
@@ -34,27 +34,38 @@ const SidePanel = ({allItems, itemInSidePanel, clearState, changeName, changeDes
                     <Label for="imgurl">Ссылка на фото блюда</Label>
                     <Input value={itemInSidePanel.imgUrl} onChange={(e) => changeImgUrl(e.target.value)} type="text" name="imgurl" id="imgurl" placeholder="Вставьте ссылку на картинку" />
                 </FormGroup>
-                <FormGroup className="side-panel__form__group">
-                    <Label for="category">Категория</Label>
-                    <Input value={itemInSidePanel.category.name} onChange={(e) => changeCategoryName(e.target.value)} type="text" name="category" id="category" placeholder="Выберите категорию"/>
+                <FormGroup className={(ChangedItem) ? "side-panel__form__group" : "hidden"}>
+                    <Label for="available">Доступен: <Input type="select" value={itemInSidePanel.available} name="available" id="available" onChange={(e) => changeAvailable(e.target.value)}>
+                                                        <option>Да</option>
+                                                        <option>Нет</option>
+                                                    </Input>
+                    </Label>
                 </FormGroup>
-                <FormGroup className="side-panel__form__group">
-                    <Label for="category-weight">Вес категории</Label>
-                    <Input value={itemInSidePanel.category.weight} onChange={(e) => changeCategoryWeight(e.target.value)} type="text" name="category" id="category" placeholder="Выберите категорию"/>
+                <FormGroup className={(ChangedItem) ? "side-panel__form__group" : "hidden"}>
+                    <Label for="category">Категория</Label>
+                    <div className="side-panel__form__group__category-wrapper">
+                        <Input type="select" value={itemInSidePanel.category} onChange={(e) => changeCategory(e.target.value)} name="category" id="category" className="cat">
+                            {categories.map(cat => {
+                                return (<option key={cat._id}>{cat.name}</option>)
+                            })}
+                        </Input>
+                        <Button onClick={(e) => categoriesModalOpen(e)} className="side-panel__form__group__category-wrapper__btn">+</Button>
+                    </div>
+                    
                 </FormGroup>
                 
-                <Button onClick={(e) => {
-                    const findItemById = allItems.find(examp => examp._id === itemInSidePanel._id );
-                    if (findItemById === undefined) {
+                
+                <Button onClick={(itemInSidePanel._id.length === 0) ? (e) => {
                         addNewItem(itemInSidePanel);
                         console.log(itemInSidePanel._id);
                         clearState();
-                    } else {
+                    } :
+                        (e) => {
                         changeExistItem(itemInSidePanel);
                         console.log(itemInSidePanel._id);
                         clearState();
                     }
-                }}>Сохранить изменения</Button>
+                }>Сохранить изменения</Button>
                 </Form>
                 
     
@@ -74,22 +85,25 @@ SidePanel.propTypes = {
     changeDescription: PropTypes.func,
     changePrice: PropTypes.func,
     changeImgUrl: PropTypes.func,
-    changeCategoryName: PropTypes.func,
-    changeCategoryWeight: PropTypes.func
+    changeCategory: PropTypes.func,
+    categoriesModalOpen: PropTypes.func,
+    categoriesModalIsOpen: PropTypes.bool,
+    changeAvailable: PropTypes.func,
     
 }
 
 
-const mapStateToProps = ({categories, ChangedItem, allItems, itemInSidePanel}) => {
+const mapStateToProps = ({categories, ChangedItem, allItems, itemInSidePanel, categoriesModalIsOpen}) => {
     return {
         categories,
         ChangedItem,
         allItems,
-        itemInSidePanel
+        itemInSidePanel,
+        categoriesModalIsOpen
     }
 }
 
 
-export default connect(mapStateToProps, {addNewItem, changeExistItem, clearState, changeName, changeDescription, changePrice, changeImgUrl, changeCategoryName, changeCategoryWeight})(SidePanel);
+export default connect(mapStateToProps, {addNewItem, changeExistItem, clearState, changeName, changeDescription, start, changePrice, changeImgUrl, changeAvailable, changeCategory, categoriesModalOpen})(SidePanel);
 
 // = ({categories, ChangedItem, startCreateNewItem, startCreateNew}) =>

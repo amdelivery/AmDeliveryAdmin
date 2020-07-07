@@ -1,33 +1,54 @@
-import {GET_DATA,
-        ADD_NEW_ITEM, 
-        CHANGE_ITEM, 
-        DELETE_ONE, 
-        CHANGE_EXIST, 
+import {START,
+        GET_DATA, 
+        CHANGE_ITEM,
         SELECT_ITEM, 
         CHANGE_NAME, 
         CHANGE_DESCRIPTION, 
         CHANGE_PRICE, 
         CHANGE_IMGURL, 
-        CHANGE_CATEGORY_NAME, 
-        CHANGE_CATEGORY_WEIGHT, 
+        CHANGE_CATEGORY,
+        CHANGE_CAT_NAME,
+        CHANGE_CAT_WEIGHT,
+        CHANGE_AVAILABLE,
         CLEAR_SIDE_PANEL,
-        CLEAR_DB,
-        SAVE_DB} from './types.js';
+        CAT_MODAL_OPEN,
+        CAT_EDIT,
+        CLEAR_CAT_FOR_EDIT,
+        ADD_NEW_MOD,
+        ADD_NEW_CAT,
+        DEL_MOD,
+        CHANGE_MOD_PRICE,
+        CHANGE_MOD_NAME} from './types.js';
 import axios from 'axios';
+
+export const start = () => dispatch => {
+    axios.get('/api/category').then(res => dispatch({
+        type: START,
+        payload: res.data
+    }))
+}
 
 export const getAllItems = () => dispatch => {
     axios.get('/api').then(res => dispatch({
         type: GET_DATA,
         payload: res.data
-    }))
+    })).then(res => axios.get('/api/category').then(res => dispatch({
+        type: START,
+        payload: res.data
+    })))
 }
 
 
-export const addNewItem = (item) => {
-    return {
-        type: ADD_NEW_ITEM,
-        payload: item
-    }
+export const addNewItem = (item) => dispatch =>  {
+    axios.post('/api/', item).then(res => alert("Элемент добавлен в базу данных")).then(res => {
+        axios.get('/api').then(res => dispatch({
+            type: GET_DATA,
+            payload: res.data
+        })).then(res => axios.get('/api/category').then(res => dispatch({
+            type: START,
+            payload: res.data
+        })))
+    })
 }
 
 export const changeItem = (item) => {
@@ -37,18 +58,24 @@ export const changeItem = (item) => {
     }
 }
 
-export const deleteOneItem = (item) => {
-    return {
-        type: DELETE_ONE,
-        payload: item
-    }
+export const deleteOneItem = (item) => dispatch =>  {
+    axios.post('/api/del', item).then(res => alert("Элемент успешно удален")).then(res => {
+        axios.get('/api').then(res => dispatch({
+            type: GET_DATA,
+            payload: res.data
+        }))
+    })
 }
 
-export const changeExistItem = (item) => {
-    return {
-        type: CHANGE_EXIST,
-        payload: item
-    }
+export const changeExistItem = (item) => dispatch => {
+    axios.post('/api/item-update', item).then(res => alert("Элемент успешно изменен"))
+                                        .then(res => {
+                                            axios.get('/api')
+                                                .then(res => dispatch({
+                                                    type: GET_DATA,
+                                                    payload: res.data
+                                                }))
+                                        })
 }
 
 export const selectItem = (item) => {
@@ -93,35 +120,124 @@ export const changeImgUrl = (value) => {
     }
 }
 
-export const changeCategoryName = (value) => {
+export const changeCategory = (value) => {
     return {
-        type: CHANGE_CATEGORY_NAME,
+        type: CHANGE_CATEGORY,
         payload: value
     }
 }
 
-export const changeCategoryWeight = (value) => {
+export const changeAvailable = (value) => {
     return {
-        type: CHANGE_CATEGORY_WEIGHT,
+        type: CHANGE_AVAILABLE,
         payload: value
     }
 }
 
 
 
-export const clearDb = (allItems) => async dispatch => {
-       await dispatch ({
-               type: CLEAR_DB  
-       }); 
-       await dispatch ({
-               type: SAVE_DB,
-               payload: allItems
-       });
-       
+
+export const categoriesModalOpen = () => dispatch => {
+    axios.get('/api/category').then(res => dispatch({
+        type: CAT_MODAL_OPEN,
+        payload: res.data
+    }))
+}
+
+export const categoryEdit = (id) => {
+    return {
+        type: CAT_EDIT,
+        payload: id
+    }
+}
+
+export const clearCategoryForEdit = () => {
+    return {
+        type: CLEAR_CAT_FOR_EDIT
+    }
 }
 
 
+export const addNewMod = () => {
+    return {
+        type: ADD_NEW_MOD
+    }
+}
+
+export const delMod = (id) => {
+    return {
+        type: DEL_MOD,
+        payload: id
+    }
+}
+
+export const changeModName = (value, id) => {
+    return {
+        type: CHANGE_MOD_NAME,
+        payload: {
+            value,
+            id
+        }
+    }
+}
+
+export const changeModPrice = (value, id) => {
+    return {
+        type: CHANGE_MOD_PRICE,
+        payload: {
+            value,
+            id
+        }
+    }
+}
+
+export const changeCatName = (value) => {
+    return {
+        type: CHANGE_CAT_NAME,
+        payload: value
+    }
+}
+
+export const changeCatWeight = (value) => {
+    return {
+        type: CHANGE_CAT_WEIGHT,
+        payload: value
+    }
+}
+
+export const addNewCat = () => {
+    return {
+        type: ADD_NEW_CAT
+    }
+}
 
 
+export const delCat = (cat) => dispatch => {
+    axios.post('/api/category-delete', cat).then(res => alert('Категория успешно удалена')).then(res => {
+        axios.get('/api/category').then(res => dispatch({
+            type: CAT_MODAL_OPEN,
+            payload: res.data
+        }));
+    }).catch(err => alert(`Произошла ошибка ${err}`));
+}
+
+
+export const addNewCatInDB = (cat) => dispatch => {
+    axios.post('/api/category', cat).then(res => alert('Категория успешно добавлена')).then(res => {
+        axios.get('/api/category').then(res => dispatch({
+            type: CAT_MODAL_OPEN,
+            payload: res.data
+        }));
+        }).catch(err => alert(`Произошла ошибка ${err}`));
+}
+
+export const updateExistCat = (cat) => dispatch => {
+    axios.post('/api/category-edit-exist', cat).then(res => alert('Категория успешно обновлена')).then(res => {
+        axios.get('/api/category').then(res => dispatch({
+            type: CAT_MODAL_OPEN,
+            payload: res.data
+        }));
+    }).catch(err => alert(`Произошла ошибка ${err}`));
+}
 
 

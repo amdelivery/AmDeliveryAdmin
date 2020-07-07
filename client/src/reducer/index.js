@@ -1,22 +1,21 @@
 import {v4 as uuid} from 'uuid';
-import axios from "axios";
 
 
 const initialState = {
     allItems: [],
     ChangedItem: null,
     categories: [],
+    categoriesModalIsOpen: false,
+    categoryForEdit: null,
+    saveDone: true,
     itemInSidePanel: {
         _id: "",
         name: "",
         description: "",
         imgUrl: "",
         price: "",
-        avalaible: true,
-        category: {
-            name: "",
-            weight: ""
-        }
+        available: "Да",
+        category: "Без категории"
     },
 
 }
@@ -24,21 +23,20 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case "GET_DATA": {
-            const allCat = action.payload.map(item => item.category.name);
-            const categories = [];
-            allCat.filter(cat => categories.includes(cat) ? null : categories.push(cat));
             return {
                 ...state,
                 allItems: action.payload,
-                categories: [...categories]
+                categoriesModalIsOpen: false
+            }
+        }
+
+        case "START": {
+            return {
+                ...state,
+                categories: action.payload
             }
         }
         
-        case "ADD_NEW_ITEM":
-            return {
-                ...state,
-                allItems: [...state.allItems, action.payload]
-            }
 
         case "CHANGE_ITEM":
             return {
@@ -46,24 +44,9 @@ const reducer = (state = initialState, action) => {
                 ChangedItem: action.payload
             }
 
-        case "DELETE_ONE": {
-            const index = state.allItems.indexOf(action.payload);
-            console.log('element deleted');
-            return {
-                ...state,
-                allItems: [...state.allItems.slice(0, index), ...state.allItems.slice(index + 1)]
-            }
-        }
-
-        case "CHANGE_EXIST": {
-            const index = state.allItems.findIndex(item => item._id === action.payload._id)
-            return {
-                ...state,
-                allItems: [...state.allItems.slice(0, index), action.payload, ...state.allItems.slice(index + 1)]
-            }
-        }
 
         case "SELECT_ITEM": {
+            console.log(state.itemInSidePanel)
             return {
                 ...state,
                 itemInSidePanel: {
@@ -72,11 +55,8 @@ const reducer = (state = initialState, action) => {
                     description: action.payload.description,
                     imgUrl: action.payload.imgUrl,
                     price: action.payload.price,
-                    avalaible: true,
-                    category: {
-                        name: action.payload.category.name,
-                        weight: action.payload.category.weight
-                    }
+                    available: action.payload.available,
+                    category: action.payload.category
                 }
             }
         }
@@ -121,31 +101,28 @@ const reducer = (state = initialState, action) => {
             }
         }
 
-        case "CHANGE_CATEGORY_NAME": {
+        case "CHANGE_AVAILABLE": {
+            console.log(state.itemInSidePanel.available);
             return {
                 ...state,
                 itemInSidePanel: {
                     ...state.itemInSidePanel,
-                    category: {
-                        ...state.itemInSidePanel.category,
-                        name: action.payload
-                    }
+                    available: action.payload
                 }
             }
         }
 
-        case "CHANGE_CATEGORY_WEIGHT": {
+        case "CHANGE_CATEGORY": {
+            console.log(action.payload)
             return {
                 ...state,
                 itemInSidePanel: {
                     ...state.itemInSidePanel,
-                    category: {
-                        ...state.itemInSidePanel.category,
-                        weight: action.payload
-                    }
+                    category: action.payload
                 }
             }
         }
+
         
         case "CLEAR_SIDE_PANEL" : {
             return {
@@ -153,31 +130,122 @@ const reducer = (state = initialState, action) => {
                 ChangedItem: null,
                 itemInSidePanel: {
                     ...initialState.itemInSidePanel,
-                    _id: uuid() 
+                    _id: ""
                }
             }
         }
 
-        case "CLEAR_DB": {
-            axios.post('/api/del').then(res => console.log("done"));
-            console.log("clear done");
+        case "CAT_MODAL_OPEN": {
             return {
                 ...state,
+                categoriesModalIsOpen: true,
+                categories: action.payload,
+                categoryForEdit: null,
+                allItems: []
             }
         }
 
-        case "SAVE_DB": {
-            let saveRequest = async () => {
-                await action.payload.map(item => {
-                    axios.post('/api', item)
-                         .then(res => console.log(res.status));
-                });
-                alert("Успешно сохранено");
-                
-            }
-            setTimeout(saveRequest, 2000);
+        case "CAT_EDIT": {
+            let categorySearch = null;
+            state.categories.filter(cat => (cat._id === action.payload) ? categorySearch = cat : null);
+            console.log(categorySearch);
             return {
                 ...state,
+                categoryForEdit: categorySearch
+            }
+        }
+
+        case "CLEAR_CAT_FOR_EDIT": {
+            return {
+                ...state,
+                categoryForEdit: null
+            }
+        }
+
+        case "ADD_NEW_MOD": {
+            const emptyMod = {name: "", price: "", id: uuid()};
+            return {
+                ...state,
+                categoryForEdit: {
+                    ...state.categoryForEdit,
+                    modificators: [...state.categoryForEdit.modificators, emptyMod]
+                }
+            }
+        }
+
+        case "DEL_MOD": {
+            const index = state.categoryForEdit.modificators.findIndex(item => item.id === action.payload);
+            return {
+                ...state,
+                categoryForEdit: {
+                    ...state.categoryForEdit,
+                    modificators: [...state.categoryForEdit.modificators.slice(0, index), ...state.categoryForEdit.modificators.slice(index + 1)]
+                }
+            }
+        }
+
+        case "CHANGE_MOD_NAME": {
+            const index = state.categoryForEdit.modificators.findIndex(item => item.id === action.payload.id);
+            const modForEdit = state.categoryForEdit.modificators.filter(item => item.id === action.payload.id);
+            const modWithChangedName = {
+                id: modForEdit[0].id,
+                price: modForEdit[0].price,
+                name: action.payload.value
+            };
+            return {
+                ...state,
+                categoryForEdit: {
+                    ...state.categoryForEdit,
+                    modificators: [...state.categoryForEdit.modificators.slice(0, index), modWithChangedName, ...state.categoryForEdit.modificators.slice(index + 1)]
+                }
+            }
+        }
+
+        case "CHANGE_MOD_PRICE": {
+            const index = state.categoryForEdit.modificators.findIndex(item => item.id === action.payload.id);
+            const modForEdit = state.categoryForEdit.modificators.filter(item => item.id === action.payload.id);
+            const modWithChangedPrice = {
+                id: modForEdit[0].id,
+                price: action.payload.value,
+                name: modForEdit[0].name
+            };
+            return {
+                ...state,
+                categoryForEdit: {
+                    ...state.categoryForEdit,
+                    modificators: [...state.categoryForEdit.modificators.slice(0, index), modWithChangedPrice, ...state.categoryForEdit.modificators.slice(index + 1)]
+                }
+            }
+        }
+
+        case "CHANGE_CAT_NAME": {
+            return {
+                ...state,
+                categoryForEdit: {
+                    ...state.categoryForEdit,
+                    name: action.payload
+                }
+            }
+        }
+
+        case "CHANGE_CAT_WEIGHT": {
+            return {
+                ...state,
+                categoryForEdit: {
+                    ...state.categoryForEdit,
+                    weight: action.payload
+                }
+            }
+        }
+
+        case "ADD_NEW_CAT": {
+            return {
+                ...state,
+                categoryForEdit: {
+                    name: "",
+                    weight: "",
+                    modificators: []
+                }
             }
         }
 

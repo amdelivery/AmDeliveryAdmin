@@ -24,6 +24,16 @@
     min-height: 100vh
     background-color: #f1f1f1
     padding: 50px
+    &__category
+        &__name
+            font-family: sans-serif
+            text-decoration: underline
+
+        &__line
+            display: flex
+            flex-wrap: wrap
+
+        
     &__button
         position: absolute
         top: 10px
@@ -91,7 +101,7 @@
         animation: fade 1.5s ease 0s infinite
 
     &__wrapper
-        position: relative    
+        position: relative   
         max-height: 320px
         margin-bottom: 10px
 
@@ -129,3 +139,9 @@
     color: white
 .active
     display: block
+.hidden
+    display: none
+.green
+    color: #00CC66
+.red
+    color: #CC0000
