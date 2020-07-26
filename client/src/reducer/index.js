@@ -3,11 +3,23 @@ import {v4 as uuid} from 'uuid';
 
 const initialState = {
     allItems: [],
+    allUsers: [],
+    currentUser: {
+        name: "",
+        password: "",
+        type: "",
+        login: "",
+        restId: "",
+        worktime: "",
+        adress: ""
+    },
     ChangedItem: null,
     categories: [],
     categoriesModalIsOpen: false,
+    userEditModalIsOpen: false,
     categoryForEdit: null,
     saveDone: true,
+    authDone: false,
     itemInSidePanel: {
         _id: "",
         name: "",
@@ -15,7 +27,8 @@ const initialState = {
         imgUrl: "",
         price: "",
         available: "Да",
-        category: "Без категории"
+        category: "Без категории",
+        resto: "Admin"
     },
 
 }
@@ -36,7 +49,30 @@ const reducer = (state = initialState, action) => {
                 categories: action.payload
             }
         }
+
+        case "SET_CUR_USER": {
+            return {
+                ...state,
+                currentUser: {
+                    name: action.payload.name,
+                    password: action.payload.password,
+                    type: action.payload.type,
+                    login: action.payload.login,
+                    restId: action.payload.restId,
+                    worktime: action.payload.worktime,
+                    adress: action.payload.adress
+                },
+                authDone: true
+            }
+        }
         
+        case "GET_ALL_USERS": {
+            return {
+                ...state,
+                allUsers: action.payload
+
+            }
+        }
 
         case "CHANGE_ITEM":
             return {
@@ -56,7 +92,8 @@ const reducer = (state = initialState, action) => {
                     imgUrl: action.payload.imgUrl,
                     price: action.payload.price,
                     available: action.payload.available,
-                    category: action.payload.category
+                    category: action.payload.category,
+                    resto: action.payload.resto
                 }
             }
         }
@@ -87,6 +124,16 @@ const reducer = (state = initialState, action) => {
                 itemInSidePanel: {
                     ...state.itemInSidePanel,
                     price: action.payload
+                }
+            }
+        }
+
+        case "CHANGE_RESTO": {
+            return {
+                ...state,
+                itemInSidePanel: {
+                    ...state.itemInSidePanel,
+                    resto: action.payload
                 }
             }
         }
@@ -246,6 +293,13 @@ const reducer = (state = initialState, action) => {
                     weight: "",
                     modificators: []
                 }
+            }
+        }
+
+        case "USER_EDIT_MODAL": {
+            return {
+                ...state,
+                userEditModalIsOpen: !state.userEditModalIsOpen
             }
         }
 

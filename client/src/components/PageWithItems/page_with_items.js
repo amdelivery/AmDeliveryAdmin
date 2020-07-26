@@ -10,7 +10,7 @@ import CategoriesEditModal from '../CategoriesEditModal';
 import {getAllItems, changeItem, deleteOneItem, selectItem} from '../../actions/actions.js';
 
 
-  const PageWithItems = ({allItems, getAllItems, changeItem, ChangedItem, deleteOneItem, selectItem, saveDone, categoriesModalIsOpen, categories}) => {
+  const PageWithItems = ({allItems, getAllItems, changeItem, ChangedItem, deleteOneItem, selectItem, saveDone, categoriesModalIsOpen, categories,  currentUser, allUsers}) => {
       const saving = (saveDone === false) ? (<div className="page-with-items__saving">Сохранение данных...</div>) : null;
       const renderedItem = (allItems.length === 0) ? null : 
             (<div>
@@ -64,17 +64,21 @@ import {getAllItems, changeItem, deleteOneItem, selectItem} from '../../actions/
       deleteOneItem: PropTypes.func,
       saveDone: PropTypes.bool,
       categoriesModalIsOpen: PropTypes.bool,
-      categories: PropTypes.array
+      categories: PropTypes.array,
+      currentUser: PropTypes.object,
+      allUsers: PropTypes.array
   }
 
 
-  const mapStateToProps = ({allItems, ChangedItem, saveDone, categoriesModalIsOpen, categories}) => {
+  const mapStateToProps = ({allItems, ChangedItem, saveDone, categoriesModalIsOpen, categories, currentUser, allUsers}) => {
       return {
           allItems,
           ChangedItem,
           saveDone,
           categoriesModalIsOpen,
-          categories
+          categories,
+          currentUser,
+          allUsers
       }
 
   }

@@ -6,6 +6,7 @@ import {START,
         CHANGE_DESCRIPTION, 
         CHANGE_PRICE, 
         CHANGE_IMGURL, 
+        CHANGE_RESTO,
         CHANGE_CATEGORY,
         CHANGE_CAT_NAME,
         CHANGE_CAT_WEIGHT,
@@ -17,6 +18,9 @@ import {START,
         ADD_NEW_MOD,
         ADD_NEW_CAT,
         DEL_MOD,
+        GET_ALL_USERS,
+        SET_CUR_USER,
+        USER_EDIT_MODAL,
         CHANGE_MOD_PRICE,
         CHANGE_MOD_NAME} from './types.js';
 import axios from 'axios';
@@ -28,6 +32,20 @@ export const start = () => dispatch => {
     }))
 }
 
+export const getAllUsers = () => dispatch => {
+    axios.get('/api/users').then(res => dispatch({
+        type: GET_ALL_USERS,
+        payload: res.data
+    }))
+}
+
+export const setCurUser = (user) => {
+    return {
+        type: SET_CUR_USER,
+        payload: user
+    }
+}
+
 export const getAllItems = () => dispatch => {
     axios.get('/api').then(res => dispatch({
         type: GET_DATA,
@@ -36,6 +54,10 @@ export const getAllItems = () => dispatch => {
         type: START,
         payload: res.data
     })))
+}
+
+export const delUser = (id) => dispatch =>  {
+    axios.post('api/del_user', id).then(res => alert("Пользователь удален"));
 }
 
 
@@ -68,6 +90,7 @@ export const deleteOneItem = (item) => dispatch =>  {
 }
 
 export const changeExistItem = (item) => dispatch => {
+    console.log(item)
     axios.post('/api/item-update', item).then(res => alert("Элемент успешно изменен"))
                                         .then(res => {
                                             axios.get('/api')
@@ -109,6 +132,13 @@ export const changeDescription = (value) => {
 export const changePrice = (value) => {
     return {
         type: CHANGE_PRICE,
+        payload: value
+    }
+}
+
+export const changeResto = (value) => {
+    return {
+        type: CHANGE_RESTO,
         payload: value
     }
 }
@@ -238,6 +268,16 @@ export const updateExistCat = (cat) => dispatch => {
             payload: res.data
         }));
     }).catch(err => alert(`Произошла ошибка ${err}`));
+}
+
+export const userEditModal = () => {
+    return {
+        type: USER_EDIT_MODAL
+    }
+}
+
+export const saveNewUser = (itemObj) => dispatch => {
+    axios.post('api/users', itemObj).then(res => alert(`Пользователь ${itemObj.name} успешно сохранен`)).then(result => dispatch({type: USER_EDIT_MODAL}))
 }
 
 

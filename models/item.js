@@ -7,7 +7,8 @@ const ItemSchema = new Schema ({
     imgUrl: String,
     price: String,
     available: String,
-    category: String
+    category: String,
+    resto: String
 })
 
 module.exports = Item = mongoose.model('menuitem', ItemSchema);

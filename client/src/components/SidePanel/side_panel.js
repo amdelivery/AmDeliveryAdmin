@@ -3,9 +3,9 @@ import {connect} from 'react-redux';
 import './side_panel.sass';
 import { Button, Form, FormGroup, Label, Input} from 'reactstrap';
 import PropTypes from 'prop-types';
-import {addNewItem, changeExistItem, clearState, changeName, changeDescription, changePrice, changeImgUrl, changeCategory, categoriesModalOpen, changeAvailable, start} from '../../actions/actions.js';
+import {addNewItem, changeExistItem, clearState, changeName, changeDescription, changePrice, changeImgUrl, changeCategory, categoriesModalOpen, changeAvailable, start, changeResto} from '../../actions/actions.js';
 
-const SidePanel = ({itemInSidePanel, clearState, changeName, changeDescription, categories, changePrice, changeImgUrl, changeCategory, addNewItem, changeExistItem, categoriesModalOpen, categoriesModalIsOpen, changeAvailable, ChangedItem}) => {
+const SidePanel = ({itemInSidePanel, clearState, changeName, changeDescription, categories, changePrice, changeImgUrl, changeCategory, addNewItem, changeExistItem, categoriesModalOpen, categoriesModalIsOpen, changeAvailable, ChangedItem, allUsers, changeResto, currentUser}) => {
 
         
             
@@ -33,6 +33,16 @@ const SidePanel = ({itemInSidePanel, clearState, changeName, changeDescription, 
                 <FormGroup className="side-panel__form__group">
                     <Label for="imgurl">Ссылка на фото блюда</Label>
                     <Input value={itemInSidePanel.imgUrl} onChange={(e) => changeImgUrl(e.target.value)} type="text" name="imgurl" id="imgurl" placeholder="Вставьте ссылку на картинку" />
+                </FormGroup>
+                <FormGroup className={(currentUser.login === "admin" && ChangedItem) ? "side-panel__form__group" : "hidden"}>
+                    <Label for="resto">Ресторан</Label>
+                    <Input value={(currentUser.login === "admin") ? itemInSidePanel.resto : currentUser.resto} className="resto" onChange={(e) => changeResto(e.target.value)} type="select" name="resto" id="resto">
+                        {allUsers.map(user => {
+                            return (
+                                <option key={user.name}>{user.name}</option>
+                            )
+                        })}
+                    </Input>
                 </FormGroup>
                 <FormGroup className={(ChangedItem) ? "side-panel__form__group" : "hidden"}>
                     <Label for="available">Доступен: <Input className="available" type="select" value={itemInSidePanel.available} name="available" id="available" onChange={(e) => changeAvailable(e.target.value)}>
@@ -89,21 +99,25 @@ SidePanel.propTypes = {
     categoriesModalOpen: PropTypes.func,
     categoriesModalIsOpen: PropTypes.bool,
     changeAvailable: PropTypes.func,
+    changeResto: PropTypes.func,
+    currentUser: PropTypes.object
     
 }
 
 
-const mapStateToProps = ({categories, ChangedItem, allItems, itemInSidePanel, categoriesModalIsOpen}) => {
+const mapStateToProps = ({categories, ChangedItem, allItems, itemInSidePanel, categoriesModalIsOpen, allUsers, currentUser}) => {
     return {
         categories,
         ChangedItem,
         allItems,
         itemInSidePanel,
-        categoriesModalIsOpen
+        categoriesModalIsOpen,
+        allUsers,
+        currentUser
     }
 }
 
 
-export default connect(mapStateToProps, {addNewItem, changeExistItem, clearState, changeName, changeDescription, start, changePrice, changeImgUrl, changeAvailable, changeCategory, categoriesModalOpen})(SidePanel);
+export default connect(mapStateToProps, {addNewItem, changeExistItem, clearState, changeName, changeDescription, start, changePrice, changeImgUrl, changeAvailable, changeCategory, categoriesModalOpen, changeResto})(SidePanel);
 
 // = ({categories, ChangedItem, startCreateNewItem, startCreateNew}) =>

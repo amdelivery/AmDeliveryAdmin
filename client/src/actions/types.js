@@ -10,6 +10,7 @@ export const CHANGE_PRICE = "CHANGE_PRICE";
 export const CHANGE_IMGURL = "CHANGE_IMGURL";
 export const CHANGE_CATEGORY = "CHANGE_CATEGORY";
 export const CHANGE_AVAILABLE = "CHANGE_AVAILABLE";
+export const CHANGE_RESTO = "CHANGE_RESTO";
 export const CLEAR_SIDE_PANEL = "CLEAR_SIDE_PANEL";
 export const CLEAR_DB = "CLEAR_DB";
 export const SAVE_DB = "SAVE_DB";
@@ -23,5 +24,8 @@ export const CHANGE_MOD_PRICE = "CHANGE_MOD_PRICE";
 export const CHANGE_CAT_NAME = "CHANGE_CAT_NAME";
 export const CHANGE_CAT_WEIGHT = "CHANGE_CAT_WEIGHT";
 export const ADD_NEW_CAT = "ADD_NEW_CAT";
+export const USER_EDIT_MODAL = "USER_EDIT_MODAL";
+export const GET_ALL_USERS = "GET_ALL_USERS";
+export const SET_CUR_USER = "SET_CUR_USER";
 
 
