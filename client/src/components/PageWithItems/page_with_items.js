@@ -7,10 +7,10 @@ import {
 import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import CategoriesEditModal from '../CategoriesEditModal';
-import {getAllItems, changeItem, deleteOneItem, selectItem} from '../../actions/actions.js';
+import {getAllItems, changeItem, deleteOneItem, selectItem, changeFilterOfResto} from '../../actions/actions.js';
 
 
-  const PageWithItems = ({allItems, getAllItems, changeItem, ChangedItem, deleteOneItem, selectItem, saveDone, categoriesModalIsOpen, categories,  currentUser, allUsers}) => {
+  const PageWithItems = ({allItems, getAllItems, changeItem, ChangedItem, deleteOneItem, selectItem, saveDone, categoriesModalIsOpen, categories,  currentUser, allUsers, filterOfResto, changeFilterOfResto}) => {
       const saving = (saveDone === false) ? (<div className="page-with-items__saving">Сохранение данных...</div>) : null;
       const renderedItem = (allItems.length === 0) ? null : 
             (<div>
@@ -19,7 +19,7 @@ import {getAllItems, changeItem, deleteOneItem, selectItem} from '../../actions/
                         <div className="page-with-items__category">
                             <h2 className="page-with-items__category__name">{(allItems.findIndex(item => item.category === cat.name) !== -1) ? cat.name : null}</h2>
                             <div className="page-with-items__category__line">
-                                {allItems.filter(elem => (elem.category === cat.name) ? elem : null).map(item => {
+                                {allItems.filter(elem => (elem.category === cat.name && elem.resto === filterOfResto) ? elem : null).map(item => {
                                     return (
                                         <div key={item._id} className="page-with-items__wrapper">
                                             <Card key={item.id} className={(ChangedItem === null) ? "page-with-items__card" : (ChangedItem._id === item._id) ? "page-with-items__card checked" : "page-with-items__card"} onClick={(e) => {
@@ -49,6 +49,9 @@ import {getAllItems, changeItem, deleteOneItem, selectItem} from '../../actions/
       return (
           <div className="page-with-items">
               {saving}
+              <select value={filterOfResto} className={(currentUser.login === "admin") ? "page-with-items__select" : "hidden"} onChange={(e) => changeFilterOfResto(e.target.value)}>
+                {allUsers.map(user => (user.name === "Admin") ? null : (<option value={user.name} key={user.name}>{user.name}</option>))}
+              </select>
               <Button onClick={(e) => getAllItems(e)} className="page-with-items__button">{(categoriesModalIsOpen) ? "К списку элементов" : "Обновить"}</Button>
               {(categoriesModalIsOpen) ? <CategoriesEditModal/> : renderedItem}
 
@@ -66,11 +69,12 @@ import {getAllItems, changeItem, deleteOneItem, selectItem} from '../../actions/
       categoriesModalIsOpen: PropTypes.bool,
       categories: PropTypes.array,
       currentUser: PropTypes.object,
-      allUsers: PropTypes.array
+      allUsers: PropTypes.array,
+      filterOfResto: PropTypes.string
   }
 
 
-  const mapStateToProps = ({allItems, ChangedItem, saveDone, categoriesModalIsOpen, categories, currentUser, allUsers}) => {
+  const mapStateToProps = ({allItems, ChangedItem, saveDone, categoriesModalIsOpen, categories, currentUser, allUsers, filterOfResto}) => {
       return {
           allItems,
           ChangedItem,
@@ -78,12 +82,13 @@ import {getAllItems, changeItem, deleteOneItem, selectItem} from '../../actions/
           categoriesModalIsOpen,
           categories,
           currentUser,
-          allUsers
+          allUsers,
+          filterOfResto
       }
 
   }
 
-  export default connect(mapStateToProps, {getAllItems, changeItem, deleteOneItem, selectItem})(PageWithItems);
+  export default connect(mapStateToProps, {getAllItems, changeItem, deleteOneItem, selectItem, changeFilterOfResto})(PageWithItems);
 
 
 

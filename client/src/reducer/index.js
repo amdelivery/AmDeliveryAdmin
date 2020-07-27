@@ -15,6 +15,7 @@ const initialState = {
     },
     ChangedItem: null,
     categories: [],
+    filterOfResto: "Ресторан не выбран",
     categoriesModalIsOpen: false,
     userEditModalIsOpen: false,
     categoryForEdit: null,
@@ -28,7 +29,7 @@ const initialState = {
         price: "",
         available: "Да",
         category: "Без категории",
-        resto: "Admin"
+        resto: "Ресторан не выбран"
     },
 
 }
@@ -36,6 +37,7 @@ const initialState = {
 const reducer = (state = initialState, action) => {
     switch (action.type) {
         case "GET_DATA": {
+            console.log(action.payload);
             return {
                 ...state,
                 allItems: action.payload,
@@ -62,7 +64,8 @@ const reducer = (state = initialState, action) => {
                     worktime: action.payload.worktime,
                     adress: action.payload.adress
                 },
-                authDone: true
+                authDone: true,
+                filterOfResto: action.payload.name
             }
         }
         
@@ -300,6 +303,13 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state,
                 userEditModalIsOpen: !state.userEditModalIsOpen
+            }
+        }
+
+        case "CHANGE_FILTER_RESTO": {
+            return {
+                ...state,
+                filterOfResto: action.payload
             }
         }
 

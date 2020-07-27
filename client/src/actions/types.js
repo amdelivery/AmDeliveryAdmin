@@ -27,5 +27,6 @@ export const ADD_NEW_CAT = "ADD_NEW_CAT";
 export const USER_EDIT_MODAL = "USER_EDIT_MODAL";
 export const GET_ALL_USERS = "GET_ALL_USERS";
 export const SET_CUR_USER = "SET_CUR_USER";
+export const CHANGE_FILTER_RESTO = "CHANGE_FILTER_RESTO";
 
 

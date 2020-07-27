@@ -22,6 +22,7 @@ import {START,
         SET_CUR_USER,
         USER_EDIT_MODAL,
         CHANGE_MOD_PRICE,
+        CHANGE_FILTER_RESTO,
         CHANGE_MOD_NAME} from './types.js';
 import axios from 'axios';
 
@@ -280,4 +281,11 @@ export const saveNewUser = (itemObj) => dispatch => {
     axios.post('api/users', itemObj).then(res => alert(`Пользователь ${itemObj.name} успешно сохранен`)).then(result => dispatch({type: USER_EDIT_MODAL}))
 }
 
+
+export const changeFilterOfResto = (value) => {
+    return {
+        type: CHANGE_FILTER_RESTO,
+        payload: value
+    }
+}
 
