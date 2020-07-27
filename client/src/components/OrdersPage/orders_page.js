@@ -14,6 +14,7 @@ class OrdersPage extends Component {
         };
         this.updateOrderStatus = this.updateOrderStatus.bind(this);
         this.sendOrderToArchive = this.sendOrderToArchive.bind(this);
+        this.refreshItems = this.refreshItems.bind(this);
     }
 
     componentDidMount() {
@@ -22,9 +23,17 @@ class OrdersPage extends Component {
                 itemsInDB: res.data
             })
         })
+        this.setTimerUpdate = setInterval(this.refreshItems, 20000)
     }
 
+    componentWillUnmount() {
+        clearInterval(this.setTimerUpdate);
+    }
+
+    
+
     refreshItems() {
+        console.log('Refreshed');
         axios('/api/orders').then(res => {
             this.setState({
                 itemsInDB: res.data
@@ -60,8 +69,8 @@ class OrdersPage extends Component {
                         return(
                             <div key={_id} className={(Date.now() - date < 300000 || accepted === true) ? "orders-page__order" : "orders-page__order alert"}>
                                 <div className="orders-page__order__leftside">
-                                    <div><strong>Дата заказа:</strong> {dateObj.getDate()}.{dateObj.getMonth() + 1}.{dateObj.getFullYear()}</div>
-                                    <div><strong>Время заказа:</strong> {dateObj.getHours()}:{dateObj.getMinutes()}</div>
+                                    <div onClick={(e) => console.log(Date.now() - date)}><strong>Дата заказа:</strong> {dateObj.getDate()}.{dateObj.getMonth() + 1}.{dateObj.getFullYear()}</div>
+                                    <div><strong>Время заказа:</strong> {(String(dateObj.getHours()).length === 2) ? dateObj.getHours() : "0" + dateObj.getHours()}:{(String(dateObj.getMinutes()).length === 2) ? dateObj.getMinutes() : "0" + dateObj.getMinutes()}</div>
                                     <div><strong>Адрес доставки:</strong> {adress}</div>
                                     <div><strong>Телефон для связи:</strong> {phone}</div>
                                     <div><strong>Итоговая стоимость:</strong> {cost} руб.</div>
@@ -72,7 +81,7 @@ class OrdersPage extends Component {
                                                 return (item.map(element => {
                                                     return (
                                                         <div key={uuid()} className="orders-page__order__rightside__line">
-                                                            <div>{element.name}</div>
+                                                            <div>{element.name} ({element.modificators.map((mod, i) => (<span key={i}>{mod.name}</span>))})</div>
                                                             <div>{element.quantity} шт.</div>
                                                         </div>
                                                         )
