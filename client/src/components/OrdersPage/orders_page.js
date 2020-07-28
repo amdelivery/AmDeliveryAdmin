@@ -66,20 +66,21 @@ class OrdersPage extends Component {
             <div className="orders-page">
                 <h1>Заказы</h1>
                 <div className="orders-page__wrapper container">
-                    {this.state.itemsInDB.map(({accepted, date, cost, comment, time, phone, items, _id, resto}) => {
+                    {this.state.itemsInDB.map(({accepted, date, cost, comment, time, phone, items, _id, resto, number}) => {
                         let dateObj = new Date(+date);
                         let audio = new Audio(alarm);
-                        if (Date.now() - date > 300000 && accepted === false) {
+                        if (Date.now() - date > 180000 && accepted === false) {
                             audio.play();
                         } 
                         let renderedItem = (this.props.currentUser.name === resto || this.props.currentUser.name === "Admin") ? (
-                            <div key={_id} className={(Date.now() - date < 300000 || accepted === true) ? "orders-page__order" : "orders-page__order alert"}>
+                            <div key={_id} className={(Date.now() - date < 180000 || accepted === true) ? "orders-page__order" : "orders-page__order alert"}>
                                 <div className="orders-page__order__leftside">
                                     <div><strong>Дата заказа:</strong> {dateObj.getDate()}.{dateObj.getMonth() + 1}.{dateObj.getFullYear()}</div>
+                                    <div><strong>Номер заказа:</strong> {number}</div>
                                     <div><strong>Время заказа:</strong> {(String(dateObj.getHours()).length === 2) ? dateObj.getHours() : "0" + dateObj.getHours()}:{(String(dateObj.getMinutes()).length === 2) ? dateObj.getMinutes() : "0" + dateObj.getMinutes()}</div>
                                     <div><strong>Время визита:</strong> {time}</div>
                                     <div><strong>Телефон для связи:</strong> {phone}</div>
-                                    <div><strong>Расторан:</strong> {resto}</div>
+                                    <div><strong>Ресторан:</strong> {resto}</div>
                                     <div><strong>Комментарии к заказу:</strong> {comment}</div>
                                 </div>
                                 <div className="orders-page__order__rightside">
