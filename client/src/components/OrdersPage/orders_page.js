@@ -3,6 +3,9 @@ import './orders_page.sass';
 import './orders_page_media.sass';
 import axios from 'axios';
 import {v4 as uuid} from 'uuid';
+import {connect} from 'react-redux';
+import alarm from '../../alarm.mp3';
+import { set } from 'mongoose';
 
 
 
@@ -23,7 +26,7 @@ class OrdersPage extends Component {
                 itemsInDB: res.data
             })
         })
-        this.setTimerUpdate = setInterval(this.refreshItems, 20000)
+        this.setTimerUpdate = setInterval(this.refreshItems, 10000)
     }
 
     componentWillUnmount() {
@@ -63,17 +66,20 @@ class OrdersPage extends Component {
             <div className="orders-page">
                 <h1>Заказы</h1>
                 <div className="orders-page__wrapper container">
-                    {this.state.itemsInDB.map(({accepted, date, cost, comment, adress, phone, items, _id}) => {
-                        let dateObj = new Date(+date)
-
-                        return(
+                    {this.state.itemsInDB.map(({accepted, date, cost, comment, time, phone, items, _id, resto}) => {
+                        let dateObj = new Date(+date);
+                        let audio = new Audio(alarm);
+                        if (Date.now() - date > 300000 && accepted === false) {
+                            audio.play();
+                        } 
+                        let renderedItem = (this.props.currentUser.name === resto || this.props.currentUser.name === "Admin") ? (
                             <div key={_id} className={(Date.now() - date < 300000 || accepted === true) ? "orders-page__order" : "orders-page__order alert"}>
                                 <div className="orders-page__order__leftside">
-                                    <div onClick={(e) => console.log(Date.now() - date)}><strong>Дата заказа:</strong> {dateObj.getDate()}.{dateObj.getMonth() + 1}.{dateObj.getFullYear()}</div>
+                                    <div><strong>Дата заказа:</strong> {dateObj.getDate()}.{dateObj.getMonth() + 1}.{dateObj.getFullYear()}</div>
                                     <div><strong>Время заказа:</strong> {(String(dateObj.getHours()).length === 2) ? dateObj.getHours() : "0" + dateObj.getHours()}:{(String(dateObj.getMinutes()).length === 2) ? dateObj.getMinutes() : "0" + dateObj.getMinutes()}</div>
-                                    <div><strong>Адрес доставки:</strong> {adress}</div>
+                                    <div><strong>Время визита:</strong> {time}</div>
                                     <div><strong>Телефон для связи:</strong> {phone}</div>
-                                    <div><strong>Итоговая стоимость:</strong> {cost} руб.</div>
+                                    <div><strong>Расторан:</strong> {resto}</div>
                                     <div><strong>Комментарии к заказу:</strong> {comment}</div>
                                 </div>
                                 <div className="orders-page__order__rightside">
@@ -91,11 +97,14 @@ class OrdersPage extends Component {
                                 </div>
                                 <div className="orders-page__order__button">
                                     <button
-                                         onClick={(accepted) ? (e) => this.sendOrderToArchive({cost, comment, adress, phone, items, _id}, e) : (e) => this.updateOrderStatus({id: _id}, e)}>{(accepted) ? "Завершить выполнение" : "Принять в работу"}</button>
+                                         onClick={(accepted) ? (e) => this.sendOrderToArchive({cost, comment, time, phone, items, _id, resto, date}, e) : (e) => this.updateOrderStatus({id: _id}, e)}>{(accepted) ? "Завершить выполнение" : "Принять в работу"}</button>
                                 </div>
                                 
                             </div>
-                        )
+                        ) : null;
+
+                        return (<>{renderedItem}</>);
+                        
                         
                     })}
                 </div>
@@ -105,5 +114,11 @@ class OrdersPage extends Component {
     
 }
 
-export default OrdersPage;
+const mapStateToProps = ({currentUser}) => {
+    return {
+        currentUser
+    }
+}
+
+export default connect(mapStateToProps)(OrdersPage);
 

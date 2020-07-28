@@ -94,11 +94,12 @@ router.post('/update', (req, res) => {
 router.post('/complete', (req, res) => {
     newCompletedOrder = new CompletedOrder({
         date: Date.now(),
-        adress: req.body.adress,
+        time: req.body.time,
         phone: req.body.phone,
         comment: req.body.comment,
         items: req.body.items,
         cost: req.body.cost,
+        resto: req.body.resto
     })
     newCompletedOrder.save().then(item => res.json(item));
 });
