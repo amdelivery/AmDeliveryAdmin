@@ -69,11 +69,11 @@ class OrdersPage extends Component {
                     {this.state.itemsInDB.map(({accepted, date, cost, comment, time, phone, items, _id, resto, number}) => {
                         let dateObj = new Date(+date);
                         let audio = new Audio(alarm);
-                        if (Date.now() - date > 180000 && accepted === false) {
+                        if (Date.now() - date > 30000 && accepted === false) {
                             audio.play();
                         } 
                         let renderedItem = (this.props.currentUser.name === resto || this.props.currentUser.name === "Admin") ? (
-                            <div key={_id} className={(Date.now() - date < 180000 || accepted === true) ? "orders-page__order" : "orders-page__order alert"}>
+                            <div key={_id} className={(Date.now() - date < 30000 || accepted === true) ? "orders-page__order" : "orders-page__order alert"}>
                                 <div className="orders-page__order__leftside">
                                     <div><strong>Дата заказа:</strong> {dateObj.getDate()}.{dateObj.getMonth() + 1}.{dateObj.getFullYear()}</div>
                                     <div><strong>Номер заказа:</strong> {number}</div>
