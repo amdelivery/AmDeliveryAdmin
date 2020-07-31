@@ -5,7 +5,6 @@ import axios from 'axios';
 import {v4 as uuid} from 'uuid';
 import {connect} from 'react-redux';
 import alarm from '../../alarm.mp3';
-import { set } from 'mongoose';
 
 
 
@@ -98,7 +97,7 @@ class OrdersPage extends Component {
                                 </div>
                                 <div className="orders-page__order__button">
                                     <button
-                                         onClick={(accepted) ? (e) => this.sendOrderToArchive({cost, comment, time, phone, items, _id, resto, date}, e) : (e) => this.updateOrderStatus({id: _id}, e)}>{(accepted) ? "Завершить выполнение" : "Принять в работу"}</button>
+                                         onClick={(accepted) ? (e) => this.sendOrderToArchive({cost, comment, phone, items, _id, resto, date}, e) : (e) => this.updateOrderStatus({id: _id}, e)}>{(accepted) ? "Завершить выполнение" : "Принять в работу"}</button>
                                 </div>
                                 
                             </div>
