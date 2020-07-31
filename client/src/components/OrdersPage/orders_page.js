@@ -86,10 +86,14 @@ class OrdersPage extends Component {
                                 {items.map((item, i) => {
                                                 return (item.map(element => {
                                                     return (
-                                                        <div key={uuid()} className="orders-page__order__rightside__line">
-                                                            <div>{element.name} ({element.modificators.map((mod, i) => (<span key={i}>{mod.name}</span>))})</div>
-                                                            <div>{element.quantity} шт.</div>
-                                                        </div>
+                                                        <>
+                                                            <div key={uuid()} className="orders-page__order__rightside__line">
+                                                                <div className="orders-page__order__rightside__line__elem">{element.name} ({element.modificators.map((mod, i) => (<span key={i}>{mod.name}</span>))})</div>
+                                                                <div>{element.quantity} шт.</div>
+                                                            </div>
+                                                            <hr/>
+                                                        </>
+                                                        
                                                         )
                                                         
                                                     }))
